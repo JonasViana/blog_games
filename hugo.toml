@@ -1,4 +1,4 @@
-baseURL = 'https://JonasViana.github.io/blog_games/'
+baseURL = 'https://focogames.com.br/'
 languageCode = 'pt-br'
 title = 'Foco Games'
 theme = 'PaperMod'
@@ -12,6 +12,7 @@ canonifyURLs = true
     defaultTheme = "dark"
     ShowShareButtons = true 
     ShowReadingTime = true
+    images = ["link-para-a-logo-do-seu-blog.png"] # Imagem padrão caso o post não tenha capa
 
 [params.homeInfoParams]
     Title = "Bem-vindo ao Foco Games!"
