@@ -1,11 +1,12 @@
+from google import genai
 import feedparser
 import os
 import re
+import time
 from datetime import datetime
-import google.generativeai as genai
 from dotenv import load_dotenv
 
-# Carrega as senhas do ficheiro .env
+
 load_dotenv()
 
 # --- Configurações ---
@@ -13,57 +14,47 @@ RSS_URL = "https://br.ign.com/feed.xml"
 PASTA_POSTS = r"C:\Users\jonas\Desktop\blog-games\content\posts"
 CHAVE_GEMINI = os.getenv("CHAVE_GEMINI")
 
-genai.configure(api_key=CHAVE_GEMINI)
-modelo_ia = genai.GenerativeModel('gemini-2.5-flash')
+# Configuração da nova biblioteca
+# Configuração da nova biblioteca forçando a versão estável
+client = genai.Client(api_key=CHAVE_GEMINI, http_options={'api_version': 'v1'})
+
+# Tente este modelo que é o mais atual e estável para o novo SDK
+MODELO = "gemini-2.0-flash"
 
 def obter_imagem(noticia):
-    """Tenta extrair a imagem de destaque do feed RSS."""
-    # Procura na tag media_thumbnail ou media_content (padrão em muitos feeds)
     if 'media_thumbnail' in noticia and len(noticia.media_thumbnail) > 0:
         return noticia.media_thumbnail[0]['url']
     elif 'media_content' in noticia and len(noticia.media_content) > 0:
         return noticia.media_content[0]['url']
-    
-    # Se não encontrar, tenta procurar uma tag <img> dentro do resumo
     match = re.search(r'<img[^>]+src="([^">]+)"', noticia.summary)
-    if match:
-        return match.group(1)
-        
-    return "" # Retorna vazio se não encontrar imagem
+    return match.group(1) if match else ""
 
 def reescrever_com_ia(titulo_original, resumo_original):
-    """Pede à IA para criar um artigo completo baseado na notícia."""
     prompt = f"""
-    És um redator sénior de um blog de videojogos chamado 'Foco Games'.
-    Escreve um artigo completo e envolvente de 3 a 4 parágrafos baseado na informação abaixo.
-    Não uses frases como "Leia a matéria completa" ou "Resumo". Escreve o teu próprio texto otimizado para SEO.
-    Usa formatação Markdown (negritos, listas se fizer sentido).
+    Atue como redator sênior do portal 'Foco Games'. 
+    Reescreva a notícia abaixo com tom profissional, gamer e otimizado para SEO.
     
-    Informação Base:
-    Título: {titulo_original}
+    Notícia: {titulo_original}
     Resumo: {resumo_original}
     
-    Retorna o resultado EXATAMENTE neste formato, separando o título do conteúdo:
-    TITULO: [O Teu Novo Título Aqui]
-    CONTEUDO: [O Teu Texto Completo Aqui]
+    Retorne EXATAMENTE neste formato:
+    TITULO: [Título Chamativo]
+    DESCRICAO: [Resumo de 160 caracteres para o Google]
+    CONTEUDO: [Texto de 3 a 4 parágrafos em Markdown]
     """
     try:
-        resposta = modelo_ia.generate_content(prompt)
-        texto_gerado = resposta.text
+        # Sintaxe da nova biblioteca
+        response = client.models.generate_content(model=MODELO, contents=prompt)
+        t = response.text
         
-        # Usa Expressões Regulares para extrair com precisão
-        titulo_match = re.search(r'TITULO:\s*(.+)', texto_gerado)
-        conteudo_match = re.search(r'CONTEUDO:\s*(.+)', texto_gerado, re.DOTALL)
+        novo_titulo = re.search(r'TITULO:\s*(.+)', t).group(1).strip()
+        nova_desc = re.search(r'DESCRICAO:\s*(.+)', t).group(1).strip()
+        novo_cont = re.search(r'CONTEUDO:\s*(.+)', t, re.DOTALL).group(1).strip()
         
-        if titulo_match and conteudo_match:
-            novo_titulo = titulo_match.group(1).strip()
-            novo_conteudo = conteudo_match.group(1).strip()
-            return novo_titulo, novo_conteudo
-        else:
-            return None, None
+        return novo_titulo, nova_desc, novo_cont
     except Exception as e:
-        print(f"Erro ao processar a IA: {e}")
-        return None, None
+        print(f"❌ Erro na IA: {e}")
+        return None, None, None
 
 def limpar_nome_arquivo(titulo):
     nome = re.sub(r'[^\w\s-]', '', titulo.lower())
@@ -74,56 +65,46 @@ def criar_post_hugo(noticia):
     caminho_completo = os.path.join(PASTA_POSTS, nome_arquivo)
     
     if os.path.exists(caminho_completo):
-        return False # Ignora se já existir para não sobrescrever
-
-    print(f"🧠 A gerar artigo (com imagem) via IA: {noticia.title}...")
-    
-    # 1. Puxa a imagem original
-    imagem_url = obter_imagem(noticia)
-    
-    # 2. Puxa o texto reescrito
-    novo_titulo, novo_conteudo = reescrever_com_ia(noticia.title, noticia.summary)
-    
-    if not novo_titulo or not novo_conteudo:
-        print("⚠️ IA falhou nesta notícia. A saltar para a próxima.")
         return False
 
-    data_publicacao = datetime(*noticia.published_parsed[:6]).strftime('%Y-%m-%dT%H:%M:%S-03:00')
+    img = obter_imagem(noticia)
+    titulo, desc, conteudo = reescrever_com_ia(noticia.title, noticia.summary)
+    
+    if not titulo: return False
 
-    # Estrutura perfeita para o Hugo + PaperMod
-    conteudo_md = f"""---
-title: "{novo_titulo.replace('"', "'")}"
-date: {data_publicacao}
+    data_atual = datetime.now().strftime('%Y-%m-%dT%H:%M:%S-03:00')
+
+    post_template = f"""---
+title: "{titulo.replace('"', "'")}"
+date: {data_atual}
+description: "{desc.replace('"', "'")}"
 draft: false
 categories: ["Notícias"]
-tags: ["atualidade", "games"]
+tags: ["games", "news"]
 cover:
-    image: "{imagem_url}"
-    alt: "Imagem de destaque: {novo_titulo.replace('"', "'")}"
+    image: "{img}"
+    alt: "{titulo.replace('"', "'")}"
 ---
 
-{novo_conteudo}
+{conteudo}
 
 ---
-*Fonte original: [Ver matéria completa]({noticia.link})*
+*Fonte: [IGN Brasil]({noticia.link})*
 """
     with open(caminho_completo, "w", encoding="utf-8") as f:
-        f.write(conteudo_md)
+        f.write(post_template)
     
-    print(f"✅ Artigo guardado com sucesso: {nome_arquivo}")
+    print(f"✅ Post SEO Criado: {nome_arquivo}")
     return True
 
 def rodar_bot():
-    print("🎮 A procurar notícias no feed...")
+    print("🤖 Bot Iniciado (Com intervalo de segurança)...")
     feed = feedparser.parse(RSS_URL)
-    
-    novos_posts = 0
-    # Processa as 3 notícias mais recentes
     for entrada in feed.entries[:3]:
-        if criar_post_hugo(entrada):
-            novos_posts += 1
-            
-    print(f"\n🚀 Sucesso! {novos_posts} artigos publicados no blog.")
+        sucesso = criar_post_hugo(entrada)
+        if sucesso:
+            print("⏳ Aguardando 5 segundos para a próxima notícia...")
+            time.sleep(5) # Intervalo para não estourar a cota da API
 
 if __name__ == "__main__":
     os.makedirs(PASTA_POSTS, exist_ok=True)

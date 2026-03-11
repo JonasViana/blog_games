@@ -3,6 +3,10 @@ languageCode = 'pt-br'
 title = 'Foco Games'
 theme = 'PaperMod'
 enableRobotsTXT = true
+[sitemap]
+  changefreq = 'daily'
+  priority = 0.5
+  filename = 'sitemap.xml'
 canonifyURLs = true
 
 [params]
@@ -12,48 +16,56 @@ canonifyURLs = true
     defaultTheme = "dark"
     ShowShareButtons = true 
     ShowReadingTime = true
-    images = ["link-para-a-logo-do-seu-blog.png"] # Imagem padrão caso o post não tenha capa
+    images = ["/images/logo-focogames.png"] # Imagem padrão caso o post não tenha capa
+    label = { text = "Foco Games", icon = "/favicon-32x32.png" }
+    assets = { favicon = "/favicon.ico" }
 
 [params.homeInfoParams]
     Title = "Bem-vindo ao Foco Games!"
     Content = "Notícias, Reviews e tudo sobre o mundo dos vídeo games."
 
-[[menu.main]]
-    name = "Posts"
-    url = "posts/"
-    weight = 10
+[[params.socialIcons]]
+    name = "youtube"
+    url = "https://youtube.com/@seu-canal" # Coloque seu link real aqui
 
-    [[menu.main]]
+[[params.socialIcons]]
+    name = "instagram"
+    url = "https://instagram.com/seu-perfil" # Coloque seu link real aqui
+
+[[params.socialIcons]]
+    name = "x"
+    url = "https://x.com/seu-perfil"
+
+[[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/JonasViana"
+
+[[menu.main]]
     name = "Notícias"
-    url = "categories/noticias/"
+    url = "/categories/notícias/"
     weight = 10
 
 [[menu.main]]
     name = "Reviews"
-    url = "categories/reviews/"
+    url = "/categories/reviews/"
     weight = 20
 
 [[menu.main]]
     name = "Guias"
-    url = "categories/guias/"
+    url = "/categories/guias/"
     weight = 30
 
 [[menu.main]]
     name = "Promoções"
-    url = "categories/promocoes/"
+    url = "/categories/promocoes/"
     weight = 40
 
 [[menu.main]]
     name = "Sobre"
     url = "/sobre/"
-    weight = 100
+    weight = 50
 
 [[menu.main]]
     name = "Contato"
     url = "/contato/"
-    weight = 110
-
-[[menu.main]]
-    name = "Privacidade"
-    url = "/privacidade/"
-    weight = 120
+    weight = 60

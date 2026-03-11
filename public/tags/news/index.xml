@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>News on Foco Games</title>
+    <link>http://localhost:1313/tags/news/</link>
+    <description>Recent content in News on Foco Games</description>
+    <image>
+      <title>Foco Games</title>
+      <url>http://localhost:1313/images/logo-focogames.png</url>
+      <link>http://localhost:1313/images/logo-focogames.png</link>
+    </image>
+    <generator>Hugo</generator>
+    <language>pt-br</language>
+    <lastBuildDate>Wed, 11 Mar 2026 13:51:27 -0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/news/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pokémon Winds &amp; Waves: Gráficos da 10ª Geração Chocam Fãs e Revivem Debate Sobre Qualidade Visual da Franquia</title>
+      <link>http://localhost:1313/posts/pok%C3%A9mon-ventos-ondas-gera-discuss%C3%A3o-entre-f%C3%A3s-sobre-qualidade-de-gr%C3%A1ficos-do-game-em-compara%C3%A7%C3%A3o-a-outros-t%C3%ADtulos-da-franquia/</link>
+      <pubDate>Wed, 11 Mar 2026 13:51:27 -0300</pubDate>
+      <guid>http://localhost:1313/posts/pok%C3%A9mon-ventos-ondas-gera-discuss%C3%A3o-entre-f%C3%A3s-sobre-qualidade-de-gr%C3%A1ficos-do-game-em-compara%C3%A7%C3%A3o-a-outros-t%C3%ADtulos-da-franquia/</guid>
+      <description>Pokémon Winds &amp;amp; Waves (10ª geração) impressiona com gráficos aprimorados, mas fãs debatem: por que essa otimização não veio antes? Entenda a polêmica!</description>
+    </item>
+    <item>
+      <title>A TEMPESTADE CHEGOU! Fortnite: Salve o Mundo Fica Gratuito e Expande para Novas Plataformas Após Quase Uma Década</title>
+      <link>http://localhost:1313/posts/quase-10-anos-ap%C3%B3s-o-lan%C3%A7amento-salve-o-mundo-modo-original-do-fortnite-ficar%C3%A1-gratuito-e-chegar%C3%A1-a-novas-plataformas/</link>
+      <pubDate>Wed, 11 Mar 2026 13:35:47 -0300</pubDate>
+      <guid>http://localhost:1313/posts/quase-10-anos-ap%C3%B3s-o-lan%C3%A7amento-salve-o-mundo-modo-original-do-fortnite-ficar%C3%A1-gratuito-e-chegar%C3%A1-a-novas-plataformas/</guid>
+      <description>Fortnite Salve o Mundo, o aclamado modo PvE, finalmente fica gratuito e expande para novas plataformas após quase 10 anos. Prepare-se para a tempestade!</description>
+    </item>
+    <item>
+      <title>Hideki Kamiya (RE2, DMC): Diretor Sugere Modo &#39;Sem Medo&#39; para Resident Evil Requiem!</title>
+      <link>http://localhost:1313/posts/hideki-kamiya-diretor-de-resident-evil-2-pede-modo-sem-medo-para-requiem-mesmo-sabendo-que-isso-vai-contra-o-conceito-do-jogo/</link>
+      <pubDate>Wed, 11 Mar 2026 13:33:44 -0300</pubDate>
+      <guid>http://localhost:1313/posts/hideki-kamiya-diretor-de-resident-evil-2-pede-modo-sem-medo-para-requiem-mesmo-sabendo-que-isso-vai-contra-o-conceito-do-jogo/</guid>
+      <description>Hideki Kamiya, lenda de RE2 e DMC, pede um modo &amp;#39;sem medo&amp;#39; para Resident Evil Requiem. Uma opção para focar em puzzles e combate sem o terror. Saiba mais!</description>
+    </item>
+  </channel>
+</rss>
