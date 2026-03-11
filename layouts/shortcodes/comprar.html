@@ -1,0 +1,15 @@
+{{ $loja := .Get "loja" | default "Comprar" }}
+{{ $link := .Get "link" }}
+{{ $preco := .Get "preco" }}
+{{ $cor := "#00ff88" }} {{ if eq (lower $loja) "nuuvem" }}
+    {{ $cor = "#00d2ff" }} {{ else if eq (lower $loja) "amazon" }}
+    {{ $cor = "#ff9900" }} {{ else if eq (lower $loja) "steam" }}
+    {{ $cor = "#171a21" }} {{ end }}
+
+<div style="text-align: center; margin: 25px 0;">
+    <a href="{{ $link }}" target="_blank" rel="noopener nofollow" 
+       style="display: inline-block; background-color: {{ $cor }}; color: #111; font-weight: bold; font-size: 1.2rem; padding: 15px 30px; text-decoration: none; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); text-transform: uppercase; transition: transform 0.2s;">
+        🛒 Comprar na {{ $loja }} 
+        {{ if $preco }}<span style="border-left: 2px solid rgba(0,0,0,0.2); margin-left: 10px; padding-left: 10px;">R$ {{ $preco }}</span>{{ end }}
+    </a>
+</div>

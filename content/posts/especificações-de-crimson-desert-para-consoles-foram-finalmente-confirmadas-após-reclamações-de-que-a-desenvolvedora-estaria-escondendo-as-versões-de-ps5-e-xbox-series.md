@@ -19,3 +19,5 @@ A divulgação destas especificações é um passo crucial que solidifica a expe
 
 ---
 *Fonte original: [Ver matéria completa](https://br.ign.com/crimson-desert/151431/news/especificacoes-de-crimson-desert-para-consoles-foram-finalmente-confirmadas-apos-reclamacoes-de-que)*
+
+{{< comprar loja="Nuuvem" preco="199,90" link="SEU_LINK_DE_AFILIADO_AQUI" >}}
