@@ -6,7 +6,6 @@ import time
 from datetime import datetime
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 # --- Configurações ---
@@ -14,12 +13,11 @@ RSS_URL = "https://br.ign.com/feed.xml"
 PASTA_POSTS = r"C:\Users\jonas\Desktop\blog-games\content\posts"
 CHAVE_GEMINI = os.getenv("CHAVE_GEMINI")
 
-# Configuração da nova biblioteca
-# Configuração da nova biblioteca forçando a versão estável
-client = genai.Client(api_key=CHAVE_GEMINI, http_options={'api_version': 'v1'})
+# Inicializa o cliente de forma simples
+client = genai.Client(api_key=CHAVE_GEMINI)
 
-# Tente este modelo que é o mais atual e estável para o novo SDK
-MODELO = "gemini-2.0-flash"
+# MUDANÇA AQUI: Algumas chaves exigem o prefixo 'models/' no novo SDK
+MODELO = "gemini-2.5-flash" 
 
 def obter_imagem(noticia):
     if 'media_thumbnail' in noticia and len(noticia.media_thumbnail) > 0:
@@ -42,19 +40,31 @@ def reescrever_com_ia(titulo_original, resumo_original):
     DESCRICAO: [Resumo de 160 caracteres para o Google]
     CONTEUDO: [Texto de 3 a 4 parágrafos em Markdown]
     """
-    try:
-        # Sintaxe da nova biblioteca
-        response = client.models.generate_content(model=MODELO, contents=prompt)
-        t = response.text
-        
-        novo_titulo = re.search(r'TITULO:\s*(.+)', t).group(1).strip()
-        nova_desc = re.search(r'DESCRICAO:\s*(.+)', t).group(1).strip()
-        novo_cont = re.search(r'CONTEUDO:\s*(.+)', t, re.DOTALL).group(1).strip()
-        
-        return novo_titulo, nova_desc, novo_cont
-    except Exception as e:
-        print(f"❌ Erro na IA: {e}")
-        return None, None, None
+    
+    # Lista de nomes para tentar caso o primeiro dê 404
+    modelos_para_tentar = [MODELO, "gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-1.5-pro"]
+    
+    for nome_modelo in modelos_para_tentar:
+        try:
+            response = client.models.generate_content(model=nome_modelo, contents=prompt)
+            t = response.text
+            
+            novo_titulo = re.search(r'TITULO:\s*(.+)', t).group(1).strip()
+            nova_desc = re.search(r'DESCRICAO:\s*(.+)', t).group(1).strip()
+            novo_cont = re.search(r'CONTEUDO:\s*(.+)', t, re.DOTALL).group(1).strip()
+            
+            return novo_titulo, nova_desc, novo_cont
+        except Exception as e:
+            if "404" in str(e):
+                print(f"⚠️ Modelo {nome_modelo} não encontrado, tentando o próximo...")
+                continue
+            elif "429" in str(e):
+                print(f"⏳ Cota atingida. Esperando 10 segundos...")
+                time.sleep(10)
+            else:
+                print(f"❌ Erro na IA: {e}")
+                break
+    return None, None, None
 
 def limpar_nome_arquivo(titulo):
     nome = re.sub(r'[^\w\s-]', '', titulo.lower())
@@ -98,13 +108,13 @@ cover:
     return True
 
 def rodar_bot():
-    print("🤖 Bot Iniciado (Com intervalo de segurança)...")
+    print("🤖 Bot Iniciado (Modo de Compatibilidade)...")
     feed = feedparser.parse(RSS_URL)
     for entrada in feed.entries[:3]:
         sucesso = criar_post_hugo(entrada)
         if sucesso:
-            print("⏳ Aguardando 5 segundos para a próxima notícia...")
-            time.sleep(5) # Intervalo para não estourar a cota da API
+            print("⏳ Aguardando 10 segundos...")
+            time.sleep(10)
 
 if __name__ == "__main__":
     os.makedirs(PASTA_POSTS, exist_ok=True)
