@@ -2,14 +2,19 @@ baseURL = 'https://JonasViana.github.io/blog_games/'
 languageCode = 'pt-br'
 title = 'Foco Games'
 theme = 'PaperMod'
+enableRobotsTXT = true
+canonifyURLs = true
 
 [params]
     showFullContents = false
     displayFullPostContent = false
     mainSections = ["posts"]
+    defaultTheme = "dark"
+    ShowShareButtons = true 
+    ShowReadingTime = true
 
 [params.homeInfoParams]
-    Title = "Bem-vindo ao Foco Games! 🎮"
+    Title = "Bem-vindo ao Foco Games!"
     Content = "Notícias, Reviews e tudo sobre o mundo dos vídeo games."
 
 [[menu.main]]

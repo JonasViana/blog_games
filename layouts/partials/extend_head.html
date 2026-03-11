@@ -1,0 +1,26 @@
+{{- if .Params.rating -}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Review",
+  "itemReviewed": {
+    "@type": "Game",
+    "name": "{{ .Params.game_title | default .Title }}"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "{{ .Site.Params.author | default "Jonas Viana" }}"
+  },
+  "datePublished": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
+  "reviewRating": {
+    "@type": "Rating",
+    "ratingValue": "{{ .Params.rating }}",
+    "bestRating": "{{ .Params.best_rating | default "5" }}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "{{ .Params.developer | default "Indefinido" }}"
+  }
+}
+</script>
+{{- end -}}
