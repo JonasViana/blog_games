@@ -2,6 +2,8 @@
 title: "O Futuro dos Games em 2026"
 date: 2026-03-10
 draft: false
+categories: ["Reviews", "Nintendo"]
+tags: ["hardware", "lançamento", "promoção"]
 ---
 
 ## Bem-vindos ao meu novo blog!
